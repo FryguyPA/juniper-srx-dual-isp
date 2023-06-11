@@ -1,1 +1,2 @@
-Temp file to init start folder.
+This folder contains the start files for the Juniper SRX Dual ISP lab
+

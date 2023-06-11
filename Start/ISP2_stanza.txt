@@ -1,0 +1,104 @@
+show configuration | no-more 
+## Last commit: 2023-06-09 20:52:03 UTC by lab
+version 20200319.130545_builder.r1095278;
+system {
+    host-name ISP2;
+    root-authentication {
+        encrypted-password "$6$6t9NgErf$7EyG7gaE9.W7XUOOgUnwGv6ObCbb8pvVFBafyUc6VoBQj6NIGetIciWTTNKsE/HNPvsVIbrexe1DVpSjuGGUN/"; ## SECRET-DATA
+    }
+    login {
+        user lab {
+            uid 2000;
+            class super-user;
+            authentication {
+                encrypted-password "$6$wh.j/a6R$VV6RImwaTJ.As8pYb6W/mTk8HFZqNfunglZLHefIXSt/j5Jh7kOXc/wR7ptN.ZLcYzpCwiXHReRoB.Spzk6KX."; ## SECRET-DATA
+            }
+        }
+    }
+    services {
+        ssh;
+        web-management {
+            http {
+                interface fxp0.0;
+            }
+        }
+    }
+    syslog {
+        user * {
+            any emergency;
+        }
+        file messages {
+            any any;
+            authorization info;
+        }
+        file interactive-commands {
+            interactive-commands any;
+        }
+    }
+    license {
+        autoupdate {
+            url https://ae1.juniper.net/junos/key_retrieval;
+        }
+    }
+}
+security {
+    forwarding-options {
+        family {
+            inet6 {
+                mode packet-based;
+            }
+            mpls {
+                mode packet-based;
+            }
+            iso {
+                mode packet-based;
+            }
+        }
+    }
+}
+interfaces {
+    ge-0/0/0 {
+        unit 0 {
+            family inet {
+                address 203.0.113.0/31;
+            }
+        }
+    }
+    ge-0/0/2 {
+        unit 0 {
+            family inet {
+                address 192.168.0.252/24;
+            }
+        }
+    }
+    fxp0 {
+        unit 0;
+    }
+    lo0 {
+        unit 0 {
+            family inet {
+                address 10.255.255.2/32;
+            }
+        }
+    }
+}
+protocols {
+    bgp {
+        group CUSTOMER {
+            type external;
+            neighbor 203.0.133.1 {
+                family inet {
+                    unicast;
+                }
+                peer-as 64511;
+            }
+        }
+    }
+}
+routing-options {
+    static {
+        route 0.0.0.0/0 next-hop 192.168.0.1;
+    }
+    router-id 10.255.255.2;
+    autonomous-system 64497;
+}

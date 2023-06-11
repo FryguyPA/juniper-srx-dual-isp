@@ -1,0 +1,42 @@
+
+
+lab@vSRX> show configuration| no-more | display set
+set version 20200319.130545_builder.r1095278
+set system host-name vSRX
+set system root-authentication encrypted-password "$6$cytF7rX6$EIkR05YhiDUqsZEvLZCsz3sqRbEnSCawfTq6CwpnwllbMhu8TBJIFN2Zy5CGQLLJ3Nh1JhP01UDNxhDhtsOux/"
+set system login user lab uid 2000
+set system login user lab class super-user
+set system login user lab authentication encrypted-password "$6$87xAcMh6$JIp1kh/tdOcnp9Xges4ExDq9typJcLQ6y6lXLaB7IgGSRTvh7xOSG5hON6KHqnyMvNFo.3PIwFDwVoMmnb9vI."
+set system services ssh
+set system services web-management http interface fxp0.0
+set system syslog user * any emergency
+set system syslog file messages any any
+set system syslog file messages authorization info
+set system syslog file interactive-commands interactive-commands any
+set system license autoupdate url https://ae1.juniper.net/junos/key_retrieval
+set security log mode stream
+set security screen ids-option untrust-screen icmp ping-death
+set security screen ids-option untrust-screen ip source-route-option
+set security screen ids-option untrust-screen ip tear-drop
+set security screen ids-option untrust-screen tcp syn-flood alarm-threshold 1024
+set security screen ids-option untrust-screen tcp syn-flood attack-threshold 200
+set security screen ids-option untrust-screen tcp syn-flood source-threshold 1024
+set security screen ids-option untrust-screen tcp syn-flood destination-threshold 2048
+set security screen ids-option untrust-screen tcp syn-flood queue-size 2000
+set security screen ids-option untrust-screen tcp syn-flood timeout 20
+set security screen ids-option untrust-screen tcp land
+set security policies from-zone trust to-zone trust policy default-permit match source-address any
+set security policies from-zone trust to-zone trust policy default-permit match destination-address any
+set security policies from-zone trust to-zone trust policy default-permit match application any
+set security policies from-zone trust to-zone trust policy default-permit then permit
+set security policies from-zone trust to-zone untrust policy default-permit match source-address any
+set security policies from-zone trust to-zone untrust policy default-permit match destination-address any
+set security policies from-zone trust to-zone untrust policy default-permit match application any
+set security policies from-zone trust to-zone untrust policy default-permit then permit
+set security zones security-zone trust tcp-rst
+set security zones security-zone untrust screen untrust-screen
+set interfaces ge-0/0/0 unit 0 family inet address 198.51.100.1/31
+set interfaces ge-0/0/1 unit 0 family inet address 203.0.113.1/31
+set interfaces ge-0/0/2 unit 0 family inet address 192.168.2.1/24
+set interfaces fxp0 unit 0
+

@@ -1,0 +1,144 @@
+show configuration | no-more 
+## Last commit: 2023-06-09 15:35:51 UTC by lab
+
+version 21.2R3-S1.7;
+system {
+    host-name vEX;
+    root-authentication {
+        encrypted-password "$6$yRazFhl.$22.ePZsjxj0YwRQKgfgcXWNRJxqqhNeSB8XXqs3T9vwEOohSmpVE6aoRA/x4N0CLtl0W0db6NeIbX2hgE0Iku0"; ## SECRET-DATA
+    }
+    login {
+        user lab {
+            uid 2000;
+            class super-user;
+            authentication {
+                encrypted-password "$6$6/1M1l/h$xUwNOv1.QhEJkn5U5wdXRcny8neWBYtTZyI9ryr.lUFDy9HKHsikSWhyO6gTUCOqSczI1EY/nTGuHSARRc3e71"; ## SECRET-DATA
+            }
+        }
+    }
+    services {
+        dhcp-local-server {
+            group Internal {
+                interface irb.255;
+            }
+        }
+    }
+    arp {
+        aging-timer 5;
+    }
+    syslog {
+        file interactive-commands {
+            interactive-commands any;
+        }
+        file messages {
+            any notice;
+            authorization info;
+        }
+    }
+    processes {
+        dhcp-service {
+            traceoptions {
+                file dhcp_logfile size 10m;
+                level all;
+                flag packet;
+            }
+        }
+    }
+}
+interfaces {
+    ge-0/0/0 {
+        unit 0 {
+            family ethernet-switching {
+                vlan {
+                    members Internal;
+                }
+            }
+        }
+    }
+    ge-0/0/1 {
+        unit 0 {
+            family ethernet-switching {
+                vlan {
+                    members Internal;
+                }
+            }
+        }
+    }
+    fxp0 {
+        unit 0 {
+            family inet {
+                dhcp {
+                    vendor-id Juniper-ex9214-VM64831D3D9C;
+                }
+            }
+            family inet6 {
+                dhcpv6-client {
+                    client-type stateful;
+                    client-ia-type ia-na;
+                    client-identifier duid-type duid-ll;
+                    vendor-id Juniper:ex9214:VM64831D3D9C;
+                }
+            }
+        }
+    }
+    irb {
+        unit 255 {
+            family inet {
+                address 192.168.2.2/24;
+            }
+        }
+    }
+}
+multi-chassis {
+    mc-lag {
+        consistency-check;
+    }
+}
+access {
+    address-assignment {
+        pool Internal {
+            family inet {
+                network 192.168.2.0/24;
+                range Pool1 {
+                    low 192.168.2.200;
+                    high 192.168.2.210;
+                }
+                dhcp-attributes {
+                    domain-name fryguy.lab;
+                    name-server {
+                        4.2.2.2;
+                        8.8.8.8;
+                    }
+                    router {
+                        192.168.2.1;
+                    }
+                }
+            }
+        }
+    }
+}
+protocols {
+    router-advertisement {
+        interface fxp0.0;
+    }
+    lldp {
+        interface all;
+    }
+    lldp-med {
+        interface all;
+    }
+    rstp {
+        interface ge-0/0/0 {
+            edge;
+        }
+        interface ge-0/0/1 {
+            edge;
+        }
+    }
+}
+vlans {
+    Internal {
+        vlan-id 255;
+        l3-interface irb.255;
+    }
+}
