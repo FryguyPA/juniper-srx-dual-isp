@@ -1,5 +1,5 @@
-show configuration | no-more 
-## Last commit: 2023-06-09 20:52:03 UTC by lab
+lab@ISP2> show configuration | no-more
+## Last commit: 2023-06-27 12:25:00 UTC by lab
 version 20200319.130545_builder.r1095278;
 system {
     host-name ISP2;
@@ -17,6 +17,11 @@ system {
     }
     services {
         ssh;
+        dhcp-local-server {
+            group Internal {
+                interface ge-0/0/0.0;
+            }
+        }
         web-management {
             http {
                 interface fxp0.0;
@@ -78,6 +83,29 @@ interfaces {
         unit 0 {
             family inet {
                 address 10.255.255.2/32;
+            }
+        }
+    }
+}
+access {
+    address-assignment {
+        pool Internal {
+            family inet {
+                network 203.0.113.0/31;
+                range Pool1 {
+                    low 203.0.113.1;
+                    high 203.0.113.1;
+                }
+                dhcp-attributes {
+                    domain-name fryguy.lab;
+                    name-server {
+                        4.2.2.2;
+                        8.8.8.8;
+                    }
+                    router {
+                        203.0.113.0;
+                    }
+                }
             }
         }
     }

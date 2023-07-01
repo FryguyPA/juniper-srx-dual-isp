@@ -1,8 +1,4 @@
-
-
-
-lab@vSRX> show configuration | no-more
-## Last commit: 2023-06-09 21:14:41 UTC by root
+## Last commit: 2023-07-01 00:48:04 UTC by lab
 version 20200319.130545_builder.r1095278;
 system {
     host-name vSRX;
@@ -23,7 +19,7 @@ system {
         web-management {
             http {
                 interface fxp0.0;
-            }
+            }                           
         }
     }
     syslog {
@@ -46,7 +42,7 @@ system {
 }
 security {
     log {
-        mode stream;
+        mode stream;                    
     }
     screen {
         ids-option untrust-screen {
@@ -69,7 +65,7 @@ security {
                 land;
             }
         }
-    }
+    }                                   
     policies {
         from-zone trust to-zone trust {
             policy default-permit {
@@ -92,7 +88,7 @@ security {
                 }
                 then {
                     permit;
-                }
+                }                       
             }
         }
     }
@@ -102,9 +98,20 @@ security {
         }
         security-zone untrust {
             screen untrust-screen;
+            host-inbound-traffic {
+                system-services {
+                    dhcp;
+                    ping;
+                    ike;
+                }
+                protocols {
+                    bgp;
+                    bfd;
+                }
+            }
         }
     }
-}
+}                                       
 interfaces {
     ge-0/0/0 {
         unit 0 {
@@ -127,7 +134,7 @@ interfaces {
             }
         }
     }
-    fxp0 {
+    fxp0 {                              
         unit 0;
     }
 }

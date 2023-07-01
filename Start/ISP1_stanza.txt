@@ -1,5 +1,5 @@
-show configuration | no-more 
-## Last commit: 2023-06-09 20:50:59 UTC by lab
+lab@ISP1> show configuration | no-more 
+## Last commit: 2023-06-27 12:20:10 UTC by lab
 version 20200319.130545_builder.r1095278;
 system {
     host-name ISP1;
@@ -17,6 +17,11 @@ system {
     }
     services {
         ssh;
+        dhcp-local-server {
+            group Internal {
+                interface ge-0/0/0.0;
+            }
+        }
         web-management {
             http {
                 interface fxp0.0;
@@ -82,6 +87,29 @@ interfaces {
         }
     }
 }
+access {
+    address-assignment {
+        pool Internal {
+            family inet {
+                network 198.51.100.0/31;
+                range Pool1 {
+                    low 198.51.100.1;
+                    high 198.51.100.1;
+                }
+                dhcp-attributes {
+                    domain-name fryguy.lab;
+                    name-server {
+                        4.2.2.2;
+                        8.8.8.8;
+                    }
+                    router {
+                        198.51.100.0;
+                    }
+                }
+            }
+        }
+    }
+}
 protocols {
     bgp {
         group CUSTOMER {
@@ -102,4 +130,5 @@ routing-options {
     router-id 10.255.255.1;
     autonomous-system 64496;
 }
-t
+
+lab@ISP1> 
